@@ -16,17 +16,19 @@ month_dict = {
         'novembre': '11',
         'décembre': '12'
 }
+os.makedirs('../data/clean', exist_ok=True)
+
+
+def clean_df(df):
+    for k, v in month_dict.items():
+        df['date'] = train_df['date'].str.replace(k, v)
+    df['date'] = df['date'].apply(lambda s: s.strip()[:10])
+    df['date'] = pd.to_datetime(df['date'], format='%d %m %Y')
+
 
 train_df = pd.read_csv('../data/raw/train.csv', sep=';')
 test_df = pd.read_csv('../data/raw/test.csv', sep=';')
-for k, v in month_dict.items():
-    train_df['date'] = train_df['date'].str.replace(k, v)
-    test_df['date'] = test_df['date'].str.replace(k, v)
-
-train_df['date'] = train_df['date'].apply(lambda s: s.strip()[:10])
-test_df['date'] = test_df['date'].apply(lambda s: s.strip()[:10])
-train_df['date'] = pd.to_datetime(train_df['date'], format='%d %m %Y')
-test_df['date'] = pd.to_datetime(test_df['date'], format='%d %m %Y')
-os.mkdir('../data/clean', exist_ok=True)
+clean_df(train_df)
+clean_df(test_df)
 train_df.to_csv('../data/clean/train.csv', sep=';', index=False)
 test_df.to_csv('../data/clean/test.csv', sep=';', index=False)
