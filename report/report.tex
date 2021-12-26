@@ -1,0 +1,117 @@
+\documentclass[a4paper, 12pt, one column]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{subfig}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{float}
+\usepackage[top=1.3cm, bottom=2.0cm, outer=2.5cm, inner=2.5cm, heightrounded,
+marginparwidth=1.5cm, marginparsep=0.4cm, margin=2.5cm]{geometry}
+\usepackage{graphicx} 
+\usepackage{hyperref} 
+\usepackage{amsmath} 
+\usepackage{amsfonts}
+\usepackage{amssymb} 
+\usepackage{multirow}
+\usepackage{layouts}
+\usepackage[nameinlink]{cleveref}
+%\usepackage{listings}
+\usepackage{listingsutf8}
+\crefdefaultlabelformat{#2#1#3}
+\graphicspath{{images/}}
+
+\renewcommand{\partname}{}
+\renewcommand{\thepart}{}
+
+\lstset{basicstyle=\ttfamily, keywordstyle=\bfseries, inputencoding=utf8/latin1}
+
+\begin{document}
+\input{titlepage}
+\newpage
+
+
+\section{Data}
+
+\subsection{Cleaning}
+
+The only cleaning needed was to convert the \lstinline{date} into \lstinline{Datetime} object.
+All the dates had the same format, for example the first row had the following string for the \lstinline{date} column: \textit{"06 septembre 2021 suite à une expérience en septembre 2021"}.
+To convert it into \lstinline[language=python]{Datetime} object we first replace the french months by their respective two digit format (\lstinline{janvier: "01", fevrier: "02", etc}), then we strip the begining trailing whitespaces and only keep the first 10 characters. Then we use the \lstinline{pandas}' function \lstinline{to_datetime()} to convert the column.
+
+
+\subsection{Exploration}
+
+First we looked into the stars distribution for all the assureur (\cref{fig:distrib}).
+
+
+\begin{figure}[H]
+    \centering
+    \input{images/distrib.pgf}
+    \caption{Stars distribution}
+    \label{fig:distrib}
+\end{figure}
+
+Then we looked into the stars distribution per assureur without and without scaling the y axis (\cref{fig:distrib_split_noscale} and \cref{fig:distrib_split_scale}).
+
+\newgeometry{top=1cm, bottom=0cm}
+\begin{figure}[H]
+    \advance\leftskip-3cm
+    \input{images/distrib_split_noscale.pgf}
+    \caption{Stars distribution per assureur}
+    \label{fig:distrib_split_noscale}
+\end{figure}
+
+
+\begin{figure}[H]
+    \advance\leftskip-3cm
+    \input{images/distrib_split_scale.pgf}
+    \caption{Stars distribution per assureur (y-axis scaled)}
+    \label{fig:distrib_split_scale}
+\end{figure}
+
+\restoregeometry
+
+\newgeometry{bottom=0cm}
+We also looked at the mean note per assureur, we used a gradient color to show the number of rating per assureur, the gradient intensity is defined by the number of ratings in \cref{fig:mean_note_per_assureur} and by the rank of the assureur (ordered by number of rating) in \cref{fig:mean_note_per_assureur_linear}
+
+\begin{figure}[H]
+    \advance\leftskip-3cm
+    \input{images/mean_note_per_assureur.pgf}
+    \caption{Mean note per assureur (colored by number of ratings)}
+    \label{fig:mean_note_per_assureur}
+\end{figure}
+\begin{figure}[H]
+    \advance\leftskip-3cm
+    \input{images/mean_note_per_assureur_linear.pgf}
+    \caption{Mean note per assureur (colored by rank)}
+    \label{fig:mean_note_per_assureur_linear}
+\end{figure}
+\restoregeometry
+
+And so naturally we looked which assureurs were the most represented in the train dataset (\cref{fig:nbnote_per_assureur}).
+
+\begin{figure}[H]
+    \advance\leftskip-2.5cm
+    \input{images/nbnote_per_assureur.pgf}
+    \caption{Number of note per assureur}
+    \label{fig:nbnote_per_assureur}
+\end{figure}
+
+Finally we watch the number of review per date using a calendar
+
+\begin{figure}[H]
+    \advance\leftskip-3cm
+    \input{images/count_calendar.pgf}
+    \caption{Number of review per day}
+    \label{fig:count_calendar}
+\end{figure}
+\section{Model}
+
+
+
+
+\end{document}
