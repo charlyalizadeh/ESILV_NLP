@@ -1,0 +1,7 @@
+*__pycache__*
+tox.ini
+models/*
+.venv
+data/clean
+data/processed
+data/word_embedding
