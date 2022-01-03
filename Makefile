@@ -27,4 +27,9 @@ process:
 tonumpy:
 	python src/process/tonumpy.py
 
-data: clean process tonumpy
+dictionary:
+	python src/process/dictionary.py
+
+data_supervised: clean process tonumpy
+data_unsupervised: clean dictionary
+data: clean process tonumpy dictionary
