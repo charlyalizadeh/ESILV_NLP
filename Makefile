@@ -23,3 +23,8 @@ pre_explore:
 
 process:
 	python src/process/process.py
+
+tonumpy:
+	python src/process/tonumpy.py
+
+data: clean process tonumpy
