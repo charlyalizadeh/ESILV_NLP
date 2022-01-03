@@ -25,6 +25,8 @@ def clean_df(df):
     df['date'] = df['date'].apply(lambda s: s.strip()[:10])
     df['date'] = pd.to_datetime(df['date'], format='%d %m %Y')
     df.dropna(subset=['avis'], inplace=True)
+    if 'note' in df.columns:
+        df['note'] = df['note'].apply(lambda s: s - 1)
 
 
 train_df = pd.read_csv('./data/raw/train.csv', sep=';')
