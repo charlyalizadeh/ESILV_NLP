@@ -21,15 +21,18 @@ clean:
 pre_explore:
 	python src/viz/pre_explore.py
 
-process:
-	python src/process/process.py
+process_supervised:
+	python src/process/process_supervised.py
 
 tonumpy:
 	python src/process/tonumpy.py
 
+process_unsupervised:
+	python src/process/process_unsupervised.py
+
 dictionary:
 	python src/process/dictionary.py
 
-data_supervised: clean process tonumpy
-data_unsupervised: clean dictionary
-data: clean process tonumpy dictionary
+data_supervised: clean process_supervised tonumpy
+data_unsupervised: clean process_unsupervised dictionary
+data: clean process_supervised tonumpy process_unsupervised dictionary
