@@ -22,6 +22,7 @@ langcodes==3.3.0
 MarkupSafe==2.0.1
 matplotlib==3.5.1
 murmurhash==1.0.6
+nltk==3.6.7
 numpy==1.21.5
 packaging==21.3
 pandas==1.3.5
@@ -37,10 +38,12 @@ PyYAML==6.0
 regex==2021.11.10
 requests==2.26.0
 sacremoses==0.0.46
+scikit-learn==1.0.2
 scipy==1.7.3
 seaborn==0.11.2
 sentencepiece==0.1.96
 six==1.16.0
+sklearn==0.0
 smart-open==5.2.1
 spacy==3.2.1
 spacy-alignments==0.8.4
@@ -48,7 +51,9 @@ spacy-legacy==3.0.8
 spacy-loggers==1.0.1
 spacy-transformers==1.1.3
 srsly==2.4.2
+tabulate==0.8.9
 thinc==8.0.13
+threadpoolctl==3.0.0
 tokenizers==0.10.3
 torch==1.10.1+cu113
 torchaudio==0.10.1+cu113
