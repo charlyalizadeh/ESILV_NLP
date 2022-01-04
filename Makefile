@@ -3,6 +3,7 @@ build:
 	mkdir -p data/clean
 	mkdir -p data/processed
 	mkdir -p models
+	mkdir -p model_out
 	unzip data/raw/datasets.zip -d data/raw
 	wget https://zenodo.org/record/3241447/files/frwiki-20181020.treetag.2.ngram-pass2__2019-04-08_09.02__.s500_w5_skip.word2vec.bin?download=1 -P data/word_embedding
 	wget https://zenodo.org/record/3241447/files/frwiki-20181020.treetag.2__2019-01-24_10.41__.s500_w5_skip.word2vec.bin?download=1 -P data/word_embedding
