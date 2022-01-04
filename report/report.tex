@@ -163,22 +163,28 @@ The \cref{tab:unsupervised} shows the result for the LDA model trained on all th
 \caption{LDA result}
 \end{table}
 
+Nothing to surprising with those results, the stemmatized words we get are all pertinent in the context of assurance review.
+
 \begin{table}[H]
 \centering
 \begin{tabular}{|p{1cm}|p{13cm}|}
 \hline
 \textbf{Note} & \textbf{Words} \\
 \hline
-    0 &    [assur, contrat, mois, aucun, être, demand, fair, rembours, pai, client] \\
-    2 & [assur, être, contrat, sinistr, demand, mois, aucun, fair, servic, véhicul] \\
-    3 &     [assur, servic, prix, contrat, bien, être, satisf, fair, client, rapid] \\
-    4 &       [assur, prix, servic, satisf, rapid, bon, bien, conseil, être, tarif] \\
-    5 &  [assur, prix, servic, satisf, rapid, recommand, bon, bien, conseil, tarif] \\
+    0 &    [assur, contrat, mois, \textbf{aucun}, être, demand, fair, \textbf{rembours}, pai, client] \\
+    2 & [assur, être, contrat, \textbf{sinistr}, demand, mois, \textbf{aucun}, fair, servic, véhicul] \\
+    3 &     [assur, servic, prix, contrat, \textbf{bien}, être, \textbf{satisf}, fair, client, \textbf{rapid}] \\
+    4 &       [assur, prix, servic, \textbf{satisf}, \textbf{rapid}, \textbf{bon}, \textbf{bien}, conseil, être, tarif] \\
+    5 &  [assur, prix, servic, \textbf{satisf}, \textbf{rapid}, \textbf{recommand}, \textbf{bon}, \textbf{bien}, conseil, tarif] \\
 \hline
 \end{tabular}
 \label{tab:unsupervised_split}
-\caption{LDA result on grouped avis}
+\caption{LDA result on grouped avis (we highlighted the word that we felt were the most pertinent)}
 \end{table}
+
+The results seems to be coherent the note given for the review, with bad connotated word for the note 1 and 2 (\textit{rembours, aucun}) and positively connotated words for the note 3, 4 and 5 (\textit{bien, satisf, bon, rapid, recommand}).
+
+We could maybe improve the pertinence of those results with more pre processing on the data (maybe remove some very generic verb such as \textit{être} and \textit{faire}).
 
 \newpage
 \section{Supervised}
@@ -195,6 +201,8 @@ Finally we extracted the \lstinline{dayofweek, day, month} and \lstinline{year} 
 
 \subsubsection{Random Forest}
 
+For the random forest model we used the sklearn implementation without depth limit.
+
 
 \begin{table}[H]
     \centering
@@ -210,6 +218,7 @@ Finally we extracted the \lstinline{dayofweek, day, month} and \lstinline{year} 
     \label{tab:rfs_train_confusion_matrix}
 \end{table}
 
+We obviously attained an accuarcy of 1 and a RMSE of 0 for the training set.
 
 
 \begin{table}[H]
@@ -226,7 +235,20 @@ Finally we extracted the \lstinline{dayofweek, day, month} and \lstinline{year} 
     \label{tab:rfs_val_confusion_matrix}
 \end{table}
 
-Validation set accuracy: 0.48185023853972203
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|}
+        \hline
+        Accuracy & 0.48185023853972203\\
+        \hline
+        RMSE & 1.642190416925949\\
+        \hline
+    \end{tabular}
+    \caption{Val metrics}
+    \label{tab:rfs_val_metrics}
+\end{table}
+
 
 \subsubsection{Feed Forward Neural Network}
 
@@ -294,5 +316,26 @@ Validation set accuracy: 0.48185023853972203
     \label{tab:val_confusion_matrix}
 \end{table}
 
+We could achieve better than a RMSE of 1.34 on the validation dataset using feed forward neural network.
+
+We achieved this results using the following architecture:
+
+\begin{lstlisting}
+Linear(306, 256)
+ReLU()
+Linear(256, 128)
+ReLU()
+Dropout(0.5)
+Linear(128, 128)
+ReLU()
+Dropout(0.5)
+Linear(128, 5)
+Softmax()
+\end{lstlisting}
+
+
+\section{Code}
+
+You can find all the code on github: \url{https://github.com/charlyalizadeh/ESILV_NLP}
 
 \end{document}
