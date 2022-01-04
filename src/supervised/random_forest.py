@@ -7,5 +7,5 @@ def train_random_forest(X, y, **kwargs):
     return clf
 
 
-def predict_random_forest(X, model):
+def predict_random_forest(X, model, **kwargs):
     return model.predict(X)
