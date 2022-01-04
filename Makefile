@@ -37,6 +37,8 @@ dictionary:
 ffnn:
 	python scripts/ffnn.py
 
+random_forest:
+	python scripts/random_forest.py
 
 data_supervised: clean process_supervised tonumpy
 data_unsupervised: clean process_unsupervised dictionary
