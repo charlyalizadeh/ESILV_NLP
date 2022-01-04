@@ -15,7 +15,6 @@ class Embedder:
     def __init__(self, embedder_type, spacy_embedding='fr_core_news_md', word2vec_embedding='no_pre_process', spacy_nlp='fr_core_news_md'):
         self.embedder_type = embedder_type
         self.nlp = spacy.load(spacy_nlp)
-        #self.embedder = None
         if embedder_type == 'spacy':
             self.embedder = spacy.load(spacy_embedding)
             self.embedding_size = 300
