@@ -22,16 +22,20 @@ pre_explore:
 	python src/viz/pre_explore.py
 
 process_supervised:
-	python src/process/process_supervised.py
+	python scripts/process_supervised.py
 
 tonumpy:
-	python src/process/tonumpy.py
+	python scripts/tonumpy.py
 
 process_unsupervised:
 	python src/process/process_unsupervised.py
 
 dictionary:
 	python src/process/dictionary.py
+
+ffnn:
+	python scripts/ffnn.py
+
 
 data_supervised: clean process_supervised tonumpy
 data_unsupervised: clean process_unsupervised dictionary

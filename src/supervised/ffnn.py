@@ -3,9 +3,19 @@ import torch.nn as nn
 from torch import tensor
 from torch.utils.data import TensorDataset, DataLoader
 from torch.optim import Adam, RMSprop
-from torch.nn.functional import one_hot
+import matplotlib
 import matplotlib.pyplot as plt
 
+
+figwidth = 6.30045
+plt.rcParams["figure.figsize"] = (figwidth, 5)
+matplotlib.use("pgf")
+matplotlib.rcParams.update({
+    "pgf.texsystem": "pdflatex",
+    'font.family': 'serif',
+    'text.usetex': True,
+    'pgf.rcfonts': False,
+})
 optimizers = {
     'Adam': Adam,
     'RMSprop': RMSprop
@@ -53,20 +63,24 @@ def predict(loader, model):
 
 
 def train_ffnn(X, y,
+               loss_fig_out,
                X_val=None, y_val=None,
                optimizer='RMSprop',
                loss='crossentropy',
-               lr=4e-5,
-               epochs=100,
+               lr=3e-5,
+               epochs=1500,
                **kwargs):
     model = nn.Sequential(
-        nn.Linear(306, 128),
+        nn.Linear(306, 256),
         nn.ReLU(),
-        #nn.Linear(256, 128),
-        #nn.ReLU(),
-        #nn.Linear(128, 64),
-        #nn.ReLU(),
-        #nn.Dropout(0.5),
+        #nn.Linear(512, 256),
+        nn.ReLU(),
+        nn.Linear(256, 128),
+        nn.ReLU(),
+        nn.Dropout(0.5),
+        nn.Linear(128, 128),
+        nn.ReLU(),
+        nn.Dropout(0.5),
         nn.Linear(128, 5),
         nn.Softmax(dim=1),
     ).cuda()
@@ -93,7 +107,8 @@ def train_ffnn(X, y,
     torch.save(model.state_dict(), './models/ffnn')
     plt.plot(list(range(len(train_losses))), train_losses)
     plt.plot(list(range(len(val_losses))), val_losses)
-    plt.show()
+    print(loss_fig_out)
+    plt.savefig(loss_fig_out, bbox_inches='tight')
     return model
 
 
