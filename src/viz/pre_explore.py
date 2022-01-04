@@ -4,6 +4,12 @@ import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 import july
+from collections import namedtuple
+from calendar import monthrange
+from datetime import datetime
+
+
+Date = namedtuple("Date", ["year", "month", "day"])
 
 figwidth = 6.30045
 plt.rcParams["figure.figsize"] = (figwidth, 5)
@@ -82,22 +88,30 @@ plt.clf()
 
 # 4. Number of review by day using a calendar
 def all_dates_in_year(year):
-    for month in range(1, 13): # Month is always 1..12
+    for month in range(1, 13):
         for day in range(1, monthrange(year, month)[1] + 1):
-            yield Date(year, month, day)
+            yield pd.Timestamp(year=year, month=month, day=day)
+
 
 grouped = df.groupby('date').count()
 grouped = grouped.reset_index()
-fig, axs = plt.subplots(nrows=6, ncols=1, figsize=(7, 18))
+fig, axs = plt.subplots(nrows=6, ncols=1, figsize=(6, 15))
 for index, year in enumerate(range(2016, 2022)):
     temp_df = grouped[(grouped['date'].dt.year < year + 1) & (grouped['date'].dt.year >= year)]
+    if year == 2016:
+        temp_df = temp_df[['date', 'note']]
+        for date in all_dates_in_year(2016):
+            if date not in temp_df['date'].values:
+                temp_df = temp_df.append({'date': date, 'note': 0}, ignore_index=True)
     july.heatmap(temp_df['date'], temp_df['note'], ax=axs[index])
-plt.savefig('./report/images/count_calendar.pgf')
+    axs[index].tick_params(axis='both', which='major', labelsize=8)
+fig.subplots_adjust(hspace=0, wspace=0)
+plt.savefig('./report/images/count_calendar.pgf', bbox_inches='tight')
 plt.clf()
 
 
 # 5. Simple evolution per assurace by time
-fig, axs = plt.subplots(nrows=8, ncols=7)#, figsize=(25, 18))
+fig, axs = plt.subplots(nrows=8, ncols=7)
 assureurs = df['assureur'].unique()
 df = df.sort_values(by='date')
 for index, assureur in enumerate(assureurs):
