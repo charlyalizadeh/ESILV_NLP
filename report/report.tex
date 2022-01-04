@@ -38,9 +38,12 @@ marginparwidth=1.5cm, marginparsep=0.4cm, margin=2.5cm]{geometry}
 
 \subsection{Cleaning}
 
-The only cleaning needed was to convert the \lstinline{date} into \lstinline{Datetime} object.
+The first column to clean was the \lstinline{date} column that we converted into \lstinline{Datetime} object.
 All the dates had the same format, for example the first row had the following string for the \lstinline{date} column: \textit{"06 septembre 2021 suite à une expérience en septembre 2021"}.
 To convert it into \lstinline[language=python]{Datetime} object we first replace the french months by their respective two digit format (\lstinline{janvier: "01", fevrier: "02", etc}), then we strip the begining trailing whitespaces and only keep the first 10 characters. Then we use the \lstinline{pandas}' function \lstinline{to_datetime()} to convert the column.
+
+We also substracted 1 to all the \lstinline{note} column so that the target starts at 0.
+
 
 
 \subsection{Exploration}
@@ -103,15 +106,193 @@ And so naturally we looked which assureurs were the most represented in the trai
 
 Finally we watch the number of review per date using a calendar
 
+\newgeometry{top=1cm, bottom=0cm}
 \begin{figure}[H]
-    \advance\leftskip-3cm
+    %\advance\leftskip-0cm
+    \centering
     \input{images/count_calendar.pgf}
     \caption{Number of review per day}
     \label{fig:count_calendar}
 \end{figure}
-\section{Model}
+\restoregeometry
+
+\section{Unsupervised}
+
+We chose to use the Latent Dirichlet Allocation model to extract the main topics of the \lstinline{avis} column.
+We trained 6 models in totals, one on all the \lstinline{avis} concatenated, and one for each \lstinline{avis} concatenated by their respective \lstinline{note}.
+
+\subsection{Data processing}
+
+We apply the following processing for the LDA models:
+\begin{itemize}
+    \item Word-tokenize the \lstinline{avis} using \lstinline{spacy}
+    \item Remove punctuation, stop words and words under 3 characters
+    \item Strip and lower the words
+    \item Lemmatize
+    \item Stemmatize
+\end{itemize}
+
+This processing applied to the first \lstinline{avis} gives us the following results:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{7cm}|p{7cm}|}
+\hline
+\textbf{Original} &
+  \textbf{Processed} \\ \hline
+Meilleurs assurances, prix, solutions, écoute, rapidité, et je recommande cette compagnie pour vous \textbackslash{}r\textbackslash{}nDes prix attractif et services de qualité et rapidité  &
+  meilleur assur prix solut écout rapid recommand compagn prix attract servic qualit rapid \\ \hline
+\end{tabular}
+\end{table}
+
+\newpage
+\subsection{Model}
+
+The \cref{tab:unsupervised} shows the result for the LDA model trained on all the \lstinline{avis} and the \cref{tab:unsupervised_split} shows the results for the LDA models trained on the \lstinline{avis} grouped by their \lstinline{note}.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{1cm}|p{13cm}|}
+\hline
+ \textbf{Topic} &                                                                  \textbf{Words} \\
+\hline
+     0 & [assur, servic, prix, contrat, être, bien, client, demand, fair, mois] \\
+\hline
+\end{tabular}
+\label{tab:unsupervised}
+\caption{LDA result}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{1cm}|p{13cm}|}
+\hline
+\textbf{Note} & \textbf{Words} \\
+\hline
+    0 &    [assur, contrat, mois, aucun, être, demand, fair, rembours, pai, client] \\
+    2 & [assur, être, contrat, sinistr, demand, mois, aucun, fair, servic, véhicul] \\
+    3 &     [assur, servic, prix, contrat, bien, être, satisf, fair, client, rapid] \\
+    4 &       [assur, prix, servic, satisf, rapid, bon, bien, conseil, être, tarif] \\
+    5 &  [assur, prix, servic, satisf, rapid, recommand, bon, bien, conseil, tarif] \\
+\hline
+\end{tabular}
+\label{tab:unsupervised_split}
+\caption{LDA result on grouped avis}
+\end{table}
+
+\newpage
+\section{Supervised}
+
+For the supervised task we use word embedding to vectorize the \lstinline{avis} column, then we use this embedding in addition to other features to train multiple models.
+
+\subsection{Data processing}
+
+We use \lstinline{spacy} and \lstinline{fasttext} word embedding to vectorize the \lstinline{avis}, both give 300 size long vectors.
+We converted the column \lstinline{assureur} and \lstinline{produit} into categorical variables.
+Finally we extracted the \lstinline{dayofweek, day, month} and \lstinline{year} from the \lstinline{date} column, then we droped the \lstinline{auteur} and \lstinline{date} columns.
+
+\subsection{Models}
+
+\subsubsection{Random Forest}
 
 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l|l|l|l|l|l|}
+         True\backslash^{\textstyle{\textrm{Predicted}}} & 1 & 2 & 3 & 4 & 5\\ \hline
+         1 & 5818 & 0 & 0 & 0 & 0 \\ \hline
+         2 & 0 & 2999 & 0 & 0 & 0 \\ \hline
+         3 & 0 & 0 & 2745 & 0 & 0 \\ \hline
+         4 & 0 & 0 & 0 & 3860 & 0 \\ \hline
+         5 & 0 & 0 & 0 & 0 & 3861  \\ \hline
+    \end{tabular}
+    \caption{Train confusion matrix}
+    \label{tab:rfs_train_confusion_matrix}
+\end{table}
+
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l|l|l|l|l|l|}
+         True\backslash^{\textstyle{\textrm{Predicted}}} & 1 & 2 & 3 & 4 & 5\\ \hline
+         1 & 1319 & 38 & 23 & 47 & 26 \\ \hline
+         2 & 592 & 26 & 19 & 52 & 28 \\ \hline
+         3 & 285 & 31 & 33 & 178 & 110 \\ \hline
+         4 & 168 & 11 & 50 & 412 & 384 \\ \hline
+         5 & 99 & 8 & 31 & 318 & 533 \\ \hline
+    \end{tabular}
+    \caption{Val confusion matrix}
+    \label{tab:rfs_val_confusion_matrix}
+\end{table}
+
+Validation set accuracy: 0.48185023853972203
+
+\subsubsection{Feed Forward Neural Network}
+
+ 
+\begin{figure}[H]
+    \centering
+    \input{images/loss_fr_core_news_md_fr_core_news_lg.pgf}
+    \caption{Loss train}
+    \label{fig:loss_train}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|}
+        \hline
+        Accuracy & 0.5394388839910802\\
+        \hline
+        RMSE & 1.217445418244049 \\
+        \hline
+    \end{tabular}
+    \caption{Train metrics}
+    \label{tab:train_metrics}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l|l|l|l|l|l|}
+         True\backslash^{\textstyle{\textrm{Predicted}}} & 1 & 2 & 3 & 4 & 5\\ \hline
+        1 & 5592 &   27 &   51 &   79 &   69 \\ \hline
+        2 & 2619 &   64 &   92 &  142 &   82 \\ \hline
+        3 & 1180 &   90 &  239 &  791 &  445 \\ \hline
+        4 & 363 &   54 &  162 & 1956 & 1325 \\ \hline
+        5 & 229 &   16 &   63 & 1002 & 2551 \\ \hline
+    \end{tabular}
+    \caption{Train confusion matrix}
+    \label{tab:val_confusion_matrix}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|}
+        \hline
+        Accuracy & 0.5289359054138145 \\
+        \hline
+        RMSE & 1.3432897739058287 \\
+        \hline
+    \end{tabular}
+    \caption{Val metrics}
+    \label{tab:val_metrics}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l|l|l|l|l|l|}
+         True\backslash^{\textstyle{\textrm{Predicted}}} & 1 & 2 & 3 & 4 & 5\\ \hline
+         1 & 1384 & 11 & 17 & 24 & 17 \\ \hline
+         2 & 606 & 16 & 22 & 50 & 23 \\ \hline
+         3 & 276 & 13 & 49 & 188 & 111 \\ \hline
+         4 & 121 & 11 & 54 & 472 & 367 \\ \hline
+         5 & 75 &  4 & 18 & 263 & 629 \\ \hline
+    \end{tabular}
+    \caption{Val confusion matrix}
+    \label{tab:val_confusion_matrix}
+\end{table}
 
 
 \end{document}
