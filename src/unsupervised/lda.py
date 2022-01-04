@@ -2,6 +2,9 @@ import gensim
 from gensim.models import LdaMulticore
 import pandas as pd
 
+pd.set_option('display.width', 10000)
+pd.set_option('display.max_colwidth', None)
+
 
 def lda_all(num_topics=1):
     dictionary = gensim.corpora.Dictionary.load('./data/processed/dictionary')
@@ -20,7 +23,7 @@ def lda_all(num_topics=1):
     for i in range(num_topics):
         results['Topic'].append(i)
         results['Words'].append([t[0] for t in lda_model.show_topic(i)])
-    print(pd.DataFrame(data=results).to_markdown())
+    print(pd.DataFrame(data=results).to_latex(index=False, column_format='p{3.5cm}|p{5cm}'))
 
 
 def lda_split():
@@ -40,7 +43,7 @@ def lda_split():
         )
         results['Note'].append(i)
         results['Words'].append([t[0] for t in lda_model.show_topic(0)])
-    print(pd.DataFrame(data=results).to_markdown())
+    print(pd.DataFrame(data=results).to_latex(index=False, column_format='p{3.5cm}|p{5cm}'))
 
 
 lda_all()
