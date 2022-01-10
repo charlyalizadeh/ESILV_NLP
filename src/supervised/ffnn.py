@@ -102,7 +102,7 @@ def train_ffnn(X, y,
             val_losses.append(val_loss.cpu())
             print(f"Epoch: {epoch:03d}, Train Loss: {train_loss:.4f} Val Loss: {val_loss:.4f}")
 
-    torch.save(model.state_dict(), './models/ffnn')
+    torch.save(model, './models/ffnn')
     plt.plot(list(range(len(train_losses))), train_losses)
     plt.plot(list(range(len(val_losses))), val_losses)
     print(loss_fig_out)
