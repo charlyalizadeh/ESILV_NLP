@@ -27,9 +27,7 @@ marginparwidth=1.5cm, marginparsep=0.4cm, margin=2.5cm]{geometry}
 \renewcommand{\partname}{}
 \renewcommand{\thepart}{}
 
-\lstset{basicstyle=\ttfamily, keywordstyle=\bfseries, inputencoding=utf8/latin1}
-
-\begin{document}
+\lstset{basicstyle=\ttfamily, keywordstyle=\bfseries, inputencoding=utf8/latin1}\begin{document}
 \input{titlepage}
 \newpage
 
@@ -39,32 +37,29 @@ marginparwidth=1.5cm, marginparsep=0.4cm, margin=2.5cm]{geometry}
 \subsection{Cleaning}
 
 The first column to clean was the \lstinline{date} column that we converted into \lstinline{Datetime} object.
-All the dates had the same format, for example the first row had the following string for the \lstinline{date} column: \textit{"06 septembre 2021 suite à une expérience en septembre 2021"}.
-To convert it into \lstinline[language=python]{Datetime} object we first replace the french months by their respective two digit format (\lstinline{janvier: "01", fevrier: "02", etc}), then we strip the begining trailing whitespaces and only keep the first 10 characters. Then we use the \lstinline{pandas}' function \lstinline{to_datetime()} to convert the column.
+All the dates had the same format, for example the first row had the following string for the \lstinline{date} column: \textit{"06 septembre 2021 suite à une expérience en septembre 2021"}. 
+To convert it into \lstinline[language=python]{Datetime} object we first replace the French months by their respective two-digit format (\lstinline{janvier: "01", fevrier: "02", etc}), then we strip the beginning trailing whitespaces and only keep the first 10 characters. Then we use the \lstinline{pandas}’ function \lstinline{to_datetime()} to convert the column. 
 
-We also substracted 1 to all the \lstinline{note} column so that the target starts at 0.
-
-
+We also subtracted 1 to all the \lstinline{note} column so that the target starts at 0. 
 
 \subsection{Exploration}
 
-First we looked into the stars distribution for all the assureur (\cref{fig:distrib}).
-
+First, we looked into the stars’ distribution for all the insurer (\cref{fig:distrib}).
 
 \begin{figure}[H]
     \centering
     \input{images/distrib.pgf}
-    \caption{Stars distribution}
+    \caption{Stars' distribution}
     \label{fig:distrib}
 \end{figure}
 
-Then we looked into the stars distribution per assureur without and without scaling the y axis (\cref{fig:distrib_split_noscale} and \cref{fig:distrib_split_scale}).
+Then we looked into the stars’ distribution per insurer without and without scaling the y axis (\cref{fig:distrib_split_noscale} and \cref{fig:distrib_split_scale}).
 
 \newgeometry{top=1cm, bottom=0cm}
 \begin{figure}[H]
     \advance\leftskip-3cm
     \input{images/distrib_split_noscale.pgf}
-    \caption{Stars distribution per assureur}
+    \caption{Stars distribution per insurer}
     \label{fig:distrib_split_noscale}
 \end{figure}
 
@@ -72,19 +67,19 @@ Then we looked into the stars distribution per assureur without and without scal
 \begin{figure}[H]
     \advance\leftskip-3cm
     \input{images/distrib_split_scale.pgf}
-    \caption{Stars distribution per assureur (y-axis scaled)}
+    \caption{Stars distribution per insurer (y-axis scaled)}
     \label{fig:distrib_split_scale}
 \end{figure}
 
 \restoregeometry
 
 \newgeometry{bottom=0cm}
-We also looked at the mean note per assureur, we used a gradient color to show the number of rating per assureur, the gradient intensity is defined by the number of ratings in \cref{fig:mean_note_per_assureur} and by the rank of the assureur (ordered by number of rating) in \cref{fig:mean_note_per_assureur_linear}
+We also looked at the mean note per insurer, we used a gradient color to show the number of ratings per insurer, the gradient intensity is defined by the number of ratings in \cref{fig:mean_note_per_assureur} and by the rank of the insurer (ordered by number of rating) in \cref{fig:mean_note_per_assureur_linear}
 
 \begin{figure}[H]
     \advance\leftskip-3cm
     \input{images/mean_note_per_assureur.pgf}
-    \caption{Mean note per assureur (colored by number of ratings)}
+    \caption{Mean note per insurer (colored by number of ratings)}
     \label{fig:mean_note_per_assureur}
 \end{figure}
 \begin{figure}[H]
@@ -95,31 +90,31 @@ We also looked at the mean note per assureur, we used a gradient color to show t
 \end{figure}
 \restoregeometry
 
-And so naturally we looked which assureurs were the most represented in the train dataset (\cref{fig:nbnote_per_assureur}).
+And so naturally we looked which insurers were the most represented in the train dataset (\cref{fig:nbnote_per_assureur}).
 
 \begin{figure}[H]
     \advance\leftskip-2.5cm
     \input{images/nbnote_per_assureur.pgf}
-    \caption{Number of note per assureur}
+    \caption{Number of notes per insurer}
     \label{fig:nbnote_per_assureur}
 \end{figure}
 
-Finally we watch the number of review per date using a calendar
+Finally we watch the number of reviews per date using a calendar 
 
 \newgeometry{top=1cm, bottom=0cm}
 \begin{figure}[H]
     %\advance\leftskip-0cm
     \centering
     \input{images/count_calendar.pgf}
-    \caption{Number of review per day}
+    \caption{Number of reviews per day}
     \label{fig:count_calendar}
 \end{figure}
 \restoregeometry
 
 \section{Unsupervised}
 
-We chose to use the Latent Dirichlet Allocation model to extract the main topics of the \lstinline{avis} column.
-We trained 6 models in totals, one on all the \lstinline{avis} concatenated, and one for each \lstinline{avis} concatenated by their respective \lstinline{note}.
+We chose to use the Latent Dirichlet Allocation model to extract the main topics of the \lstinline{avis} column. 
+We trained 6 models in totals, one on all the \lstinline{avis} concatenated, and one for each \lstinline{avis} concatenated by their respective \lstinline{note}. 
 
 \subsection{Data processing}
 
@@ -132,7 +127,7 @@ We apply the following processing for the LDA models:
     \item Stemmatize
 \end{itemize}
 
-This processing applied to the first \lstinline{avis} gives us the following results:
+This processing applied to the first \lstinline{avis} gives us the following results: 
 
 \begin{table}[H]
 \centering
@@ -148,7 +143,7 @@ Meilleurs assurances, prix, solutions, écoute, rapidité, et je recommande cett
 \newpage
 \subsection{Model}
 
-The \cref{tab:unsupervised} shows the result for the LDA model trained on all the \lstinline{avis} and the \cref{tab:unsupervised_split} shows the results for the LDA models trained on the \lstinline{avis} grouped by their \lstinline{note}.
+The \cref{tab:unsupervised} shows the result for the LDA model trained on all the \lstinline{avis} and the \cref{tab:unsupervised_split} shows the results for the LDA models trained on the \lstinline{avis} grouped by their \lstinline{note}. 
 
 \begin{table}[H]
 \centering
@@ -163,7 +158,7 @@ The \cref{tab:unsupervised} shows the result for the LDA model trained on all th
 \caption{LDA result}
 \end{table}
 
-Nothing to surprising with those results, the stemmatized words we get are all pertinent in the context of assurance review.
+Nothing too surprising with those results, the stemmatized words we get are all pertinent in the context of assurance review. 
 
 \begin{table}[H]
 \centering
@@ -179,29 +174,26 @@ Nothing to surprising with those results, the stemmatized words we get are all p
 \hline
 \end{tabular}
 \label{tab:unsupervised_split}
-\caption{LDA result on grouped avis (we highlighted the word that we felt were the most pertinent)}
+\caption{LDA results on grouped reviews (we highlighted the word that we felt were the most pertinent)}
 \end{table}
 
-The results seems to be coherent the note given for the review, with bad connotated word for the note 1 and 2 (\textit{rembours, aucun}) and positively connotated words for the note 3, 4 and 5 (\textit{bien, satisf, bon, rapid, recommand}).
+The results seem to be coherent the note given for the review, with bad connotated word for the note 1 and 2 (\textit{rembours, aucun}) and positively connotated words for the note 3, 4 and 5 (\textit{bien, satisf, bon, rapid, recommand}).
 
-We could maybe improve the pertinence of those results with more pre processing on the data (maybe remove some very generic verb such as \textit{être} and \textit{faire}).
+We could maybe improve the pertinence of those results with more preprocessing on the data (maybe remove some very generic verb such as \textit{être} and \textit{faire}). 
 
 \newpage
 \section{Supervised}
 
-For the supervised task we use word embedding to vectorize the \lstinline{avis} column, then we use this embedding in addition to other features to train multiple models.
-
+For the supervised task we use word embedding to vectorize the \lstinline{avis} column, then we use this embedding in addition to other features to train multiple models. 
 \subsection{Data processing}
 
-We use \lstinline{spacy} and \lstinline{fasttext} word embedding to vectorize the \lstinline{avis}, both give 300 size long vectors.
-We converted the column \lstinline{assureur} and \lstinline{produit} into categorical variables.
-Finally we extracted the \lstinline{dayofweek, day, month} and \lstinline{year} from the \lstinline{date} column, then we droped the \lstinline{auteur} and \lstinline{date} columns.
-
+We use \lstinline{spacy} and \lstinline{fasttext} word embedding to vectorize the column \lstinline{avis}, both give 300 size long vectors. We converted the columns \lstinline{assureur} and \lstinline{produit} into categorical variables. 
+Finally we extracted the \lstinline{dayofweek, day, month} and \lstinline{year} from the from the \lstinline{date} column, then we dropped the \lstinline{auteur} and \lstinline{date} columns. 
 \subsection{Models}
 
 \subsubsection{Random Forest}
 
-For the random forest model we used the sklearn implementation without depth limit.
+For the Random Forest model we used the sklearn implementation without depth limit.
 
 
 \begin{table}[H]
@@ -218,7 +210,7 @@ For the random forest model we used the sklearn implementation without depth lim
     \label{tab:rfs_train_confusion_matrix}
 \end{table}
 
-We obviously attained an accuarcy of 1 and a RMSE of 0 for the training set.
+We obviously attained an accuracy of 1 and a RMSE of 0 for the training set.
 
 
 \begin{table}[H]
@@ -318,7 +310,7 @@ We obviously attained an accuarcy of 1 and a RMSE of 0 for the training set.
 
 We could achieve better than a RMSE of 1.34 on the validation dataset using feed forward neural network.
 
-We achieved this results using the following architecture:
+We achieved these results using the following architecture: 
 
 \begin{lstlisting}
 Linear(306, 256)
@@ -332,6 +324,17 @@ Dropout(0.5)
 Linear(128, 5)
 Softmax()
 \end{lstlisting}
+
+\subsubsection{CamemBERT}
+
+We tried to use the CamemBERT model but neither our GPU or Google Colab's GPU could handle more than a \lstinline{batch_size} of 1 for the training, which were taking too much time to train.
+You still can find the code for this experiment in the repository.
+
+Also we didn't feel confident with the code for this experiment, so it is most likely \lstinline{that the out of memory} errors are the result of our lack of understanding.
+
+\subsubsection{Test result}
+
+For the predictions on the test set we used the Feed Forward Neural Network model. You can find the results in the \lstinline{result_test.txt} file.
 
 
 \section{Code}
